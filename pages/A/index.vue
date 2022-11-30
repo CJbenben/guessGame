@@ -1,31 +1,52 @@
 <template>
 	<view class="content">
-<!-- 		<image class="logo" src="/static/logo.png"></image>
+		<!-- <image class="logo" src="/static/logo.png"></image> -->
 		<view class="text-area">
-			<text class="title">{{title}}</text>
-		</view> -->
+			<text class="title">下一个</text>
+		</view>
 		<scroll-view class="">
 			<view class="" v-for="(item, i) in winningNumbers" v-bind:key="i">
-				<item-cell :key="i" :itemData="item"
-					@clickButton="clickRelease" />
-					<view @click="copyMeeting(item)" class="" style="text-align: center;color: #ffffff;margin: 0 auto 60rpx auto;background: #3a9efc;width: 600rpx;border-radius: 50rpx;padding: 20rpx;">
-						点击购买
-					</view>
+				<item-cell :key="i" :itemData="item" @clickButton="clickRelease" />
 			</view>
 		</scroll-view>
 	</view>
 </template>
 
 <script>
+	import {ssqList} from "../../static/ssqData.js"
+	const maxBlue = 16;
+	const maxRed = 33;
+	
 	export default {
 		data() {
 			return {
-				title: 'A',
-				winningNumbers: [1,2,3,4,5,6,7,8,9,10]
+				winningNumbers: ssqList,
+				nextBlueNum: 0,
+				nextRedNums: []
 			}
 		},
 		onLoad() {
-
+			// 存放随机生成红球数组
+			var mathRedAry = []; 
+			for (let i = 0; i<116; i++) {
+				let mathBlue = Math.floor(Math.random() * (maxRed)) + 1;
+				
+				console.log(mathBlue);;
+			}
+			
+			// console.log(this.winningNumbers);
+			// 篮球总共出现次数
+			var blueBallCount = {};
+			this.winningNumbers.forEach((item, index) => {
+				const element = item.blueNum;
+				if (blueBallCount[element]) {
+					blueBallCount[element]++
+				} else {
+					blueBallCount[element] = 1;
+				}
+			});
+			console.log(11111);
+			console.log(blueBallCount);
 		},
 		methods: {
 
@@ -37,8 +58,8 @@
 	.content {
 		display: flex;
 		flex-direction: column;
-		align-items: center;
-		justify-content: center;
+		margin-left: 15rpx;
+		margin-right: 15rpx;
 	}
 
 	.logo {
@@ -52,7 +73,7 @@
 
 	.text-area {
 		display: flex;
-		justify-content: center;
+		/* justify-content: center; */
 	}
 
 	.title {

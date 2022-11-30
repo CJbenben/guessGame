@@ -39,12 +39,12 @@
 			"pagePath": "pages/A/index",
 			"iconPath": "static/image/ic_store_tabbar_home_normal@3x.png",
 			"selectedIconPath": "static/image/ic_store_tabbar_home_selected@3x.png",
-			"text": "福彩"
+			"text": "aaa"
 		}, {
 			"pagePath": "pages/B/index",
 			"iconPath": "static/image/icon_我的_normal@3x.png",
 			"selectedIconPath": "static/image/icon_我的_press@3x.png",
-			"text": "体彩"
+			"text": "bbb"
 		}]
 	},
 	"condition": { //模式配置，仅开发期间生效
