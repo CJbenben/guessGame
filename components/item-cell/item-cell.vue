@@ -15,6 +15,18 @@
 			<view class="item_blue_ball">
 				<text class="blue_number" >{{itemData.blueNum}}</text>
 			</view>
+			<view class="scale">
+				<text class="scale_title">AB组</text>
+				<text class="scale_title">{{groupABscale}}</text>
+			</view>
+			<view class="scale">
+				<text class="scale_title">AC组</text>
+				<text class="scale_title">{{groupACscale}}</text>
+			</view>
+			<view class="scale">
+				<text class="scale_title">BC组</text>
+				<text class="scale_title">{{groupBCscale}}</text>
+			</view>
 		</view>
 		<view class="line_view" />
 	</view>
@@ -25,6 +37,9 @@
 		name: "item-cell",
 		props: {
 			itemData: {},
+			groupABscale: 0,
+			groupACscale: 0,
+			groupBCscale: 0,
 		},
 		data() {
 			return {
@@ -40,8 +55,8 @@
 <style>
 	.container {
 		background-color: #f5f5f5;
-		margin-left: 15rpx;
-		margin-right: 15rpx;
+		margin-left: 10rpx;
+		margin-right: 10rpx;
 	},
 	.bg_view_title {
 		display: flex;
@@ -97,6 +112,15 @@
 	.blue_number {
 		color: white;
 		font-size: 34rpx;
+	},
+	.scale {
+		display: flex;
+		flex-direction: column;
+		padding-left: 5rpx;
+		padding-right: 5rpx;
+	},
+	.scale_title {
+		font-size: 26rpx;
 	},
 	.line_view {
 		background-color: #ddd;
