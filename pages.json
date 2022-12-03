@@ -1,15 +1,27 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-			"path": "pages/A/index",
+			"path": "pages/Home/index",
 			"style": {
-				"navigationBarTitleText": "A"
+				"navigationBarTitleText": "首页"
 			}
 		}
 		,{
-			"path": "pages/B/index",
+			"path": "pages/UserCenter/index",
 			"style": {
-				"navigationBarTitleText": "B"
+				"navigationBarTitleText": "个人中心"
+			}
+		},
+		{
+			"path": "pages/Home/forecast",
+			"style": {
+				"navigationBarTitleText": "下一期预测"
+			}
+		},
+		{
+			"path": "pages/Home/analysis",
+			"style": {
+				"navigationBarTitleText": "分析"
 			}
 		}
     ],
@@ -36,15 +48,15 @@
 		"spacing": "3px",
 		"iconfontSrc":"static/iconfont.ttf", // app tabbar 字体.ttf文件路径 app 3.4.4+
 		"list": [{
-			"pagePath": "pages/A/index",
+			"pagePath": "pages/Home/index",
 			"iconPath": "static/image/ic_store_tabbar_home_normal@3x.png",
 			"selectedIconPath": "static/image/ic_store_tabbar_home_selected@3x.png",
-			"text": "aaa"
+			"text": "首页"
 		}, {
-			"pagePath": "pages/B/index",
+			"pagePath": "pages/UserCenter/index",
 			"iconPath": "static/image/icon_我的_normal@3x.png",
 			"selectedIconPath": "static/image/icon_我的_press@3x.png",
-			"text": "bbb"
+			"text": "个人中心"
 		}]
 	},
 	"condition": { //模式配置，仅开发期间生效

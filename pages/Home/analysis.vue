@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<text>11111</text>>
+		<text>11111</text>
 	</view>
 </template>
 

@@ -15,17 +15,19 @@
 			<view class="item_blue_ball">
 				<text class="blue_number" >{{itemData.blueNum}}</text>
 			</view>
-			<view class="scale">
-				<text class="scale_title">AB组</text>
-				<text class="scale_title">{{groupABscale}}</text>
-			</view>
-			<view class="scale">
-				<text class="scale_title">AC组</text>
-				<text class="scale_title">{{groupACscale}}</text>
-			</view>
-			<view class="scale">
-				<text class="scale_title">BC组</text>
-				<text class="scale_title">{{groupBCscale}}</text>
+			<view class="forecast" v-show="showScale">
+				<view class="scale">
+					<text class="scale_title">AB组</text>
+					<text class="scale_title">{{groupABscale}}</text>
+				</view>
+				<view class="scale">
+					<text class="scale_title">AC组</text>
+					<text class="scale_title">{{groupACscale}}</text>
+				</view>
+				<view class="scale">
+					<text class="scale_title">BC组</text>
+					<text class="scale_title">{{groupBCscale}}</text>
+				</view>
 			</view>
 		</view>
 		<view class="line_view" />
@@ -37,6 +39,7 @@
 		name: "item-cell",
 		props: {
 			itemData: {},
+			showScale: false,
 			groupABscale: 0,
 			groupACscale: 0,
 			groupBCscale: 0,
@@ -112,6 +115,10 @@
 	.blue_number {
 		color: white;
 		font-size: 34rpx;
+	},
+	.forecast {
+		display: flex;
+		flex-direction: row;
 	},
 	.scale {
 		display: flex;
