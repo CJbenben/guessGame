@@ -43,22 +43,28 @@
 				groupAC: getApp().globalData.groupAC,
 				groupBC: getApp().globalData.groupBC,
 				maxRed: getApp().globalData.maxRed,
-				guessBlueNumCount: 3,// 默认生成3个蓝球数字
-				nextRedNums: [],
 				groupABscale: [],//AB组中奖比例
 				groupACscale: [],//AC组中奖比例
 				groupBCscale: [],//BC组中奖比例
-				guessRedNums: [],//预测红球
-				guessBlueNums: [],//初步预测蓝球数组
+				guessBlueNumCount: 3,// 默认生成3个蓝球数字
+				guessAllBlueNums: [],//预测下一期可能出现的所有蓝球数组
 				guessBlueNum: '',//最终预测的蓝球
 				guessBlueNum2: '',//最终预测的蓝球（备选）
+				
+				guessRedNumCount: 24,// 默认生成24个红球数字
+				guessAllRedNums: [],//预测下一期可能出现的所有红球数组
+				guessRedNums: [],//最终预测的红球组合
 			}
 		},
 		onLoad() {
 			// console.log('AB组='+this.groupAB);
 			// console.log('AC组='+this.groupAC);
 			// console.log('BC组='+this.groupBC);
+			// 预测下一期可能出现的所有红球数组
+			this.guessAllRedBallAry()
+			// 预测下一期号码
 			this.guessNextNumsAction()
+			// 各组历史中奖比例
 			this.analyseAction()
 		},
 		methods: {
@@ -76,19 +82,73 @@
 				this.guessRedBall();
 			},
 			
+			guessAllRedBallAry() {
+				// 每个红球总共出现次数
+				var redBallCountAry = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+				this.winningNumbers.forEach((item, index) => {
+					item.redNums.forEach((redNum, index) => {
+						redBallCountAry[redNum-1]++;
+					})
+				});
+				console.log(redBallCountAry);
+				// 排序后每个红球出现次数
+				var sortRedBallCountAry = redBallCountAry.sort(this.sortNumbers)
+				console.log('sortRedBallCountAry = '+sortRedBallCountAry);
+				
+				/**
+				 * 如果有多个相同低频率出现的红球，扩大取出红球个数
+				 */
+				let lastRedNum = sortRedBallCountAry[this.guessRedNumCount-1];
+				while (lastRedNum == sortRedBallCountAry[this.guessRedNumCount]) {
+					// 满足条件，往后移一位
+					lastRedNum = sortRedBallCountAry[this.guessRedNumCount];
+					this.guessRedNumCount++
+				}
+				console.log('guessRedNumCount = '+this.guessRedNumCount);
+				
+				// 未排序
+				var noSortRedBallCountAry = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+				this.winningNumbers.forEach((item, index) => {
+					item.redNums.forEach((redNum, index) => {
+						noSortRedBallCountAry[redNum-1]++;
+					})
+				});
+				console.log('noSortRedBallCountAry = '+noSortRedBallCountAry);
+				
+				// 红球最低出现位置（位置就是出现最低次数的红球号码）
+				for (let j = 0; j<this.guessRedNumCount; j++) {
+					let sortRedNum = sortRedBallCountAry[j]
+					for (let i = 0; i<noSortRedBallCountAry.length; i++) {
+						let redBallNum = noSortRedBallCountAry[i];
+						// 如果在原始未排序中找到需要的元素，取出原始未排序的下标，即蓝球号码 && 去重
+						if ((sortRedNum == redBallNum) && !this.guessAllRedNums.includes((i+1))) {
+							this.guessAllRedNums.push(i+1)
+						}
+					}
+				}
+				console.log('预计下一期所有红球号码组 = '+ this.guessAllRedNums);
+			},
+			
 			// 私有方法：随机计算红球
 			guessRedBall() {
 				console.log('-----------------------随机计算红球');
 				// 三组红球
-				// AB组
+				// AB组guessAllRedNums
 				let arrayLength = this.groupAB.length
 				var redNumbersAB = []
 				for (let j = 0; j<6; j++) {
 					let index = Math.floor(Math.random() * (arrayLength));
+					// 去重
 					if (redNumbersAB.includes(this.groupAB[index])) {
 						j--;
 					} else {
-						redNumbersAB.push(this.groupAB[index])
+						// 如果是低频率出现的直接保存
+						if (this.guessAllRedNums.includes(this.groupAB[index])) {
+							redNumbersAB.push(this.groupAB[index])
+						} else {
+							console.log('#### = '+this.groupAB[index]);
+							j--
+						}
 					}
 					//console.log(index+'######'+groupAB[index]);
 				}
@@ -101,10 +161,17 @@
 				var redNumbersAC = []
 				for (let j = 0; j<6; j++) {
 					let index = Math.floor(Math.random() * (arrayLength));
+					// 去重
 					if (redNumbersAC.includes(this.groupAC[index])) {
 						j--;
 					} else {
-						redNumbersAC.push(this.groupAC[index])
+						// 如果是低频率出现的直接保存
+						if (this.guessAllRedNums.includes(this.groupAC[index])) {
+							redNumbersAC.push(this.groupAC[index])
+						} else {
+							console.log('#### = '+this.groupAC[index]);
+							j--
+						}
 					}
 				}
 				console.log('预计下一期红球号码AC组 = '+redNumbersAC.sort(this.sortNumbers));
@@ -114,10 +181,17 @@
 				var redNumbersBC = []
 				for (let j = 0; j<6; j++) {
 					let index = Math.floor(Math.random() * (arrayLength));
+					// 去重
 					if (redNumbersBC.includes(this.groupBC[index])) {
 						j--;
 					} else {
-						redNumbersBC.push(this.groupBC[index])
+						// 如果是低频率出现的直接保存
+						if (this.guessAllRedNums.includes(this.groupBC[index])) {
+							redNumbersBC.push(this.groupBC[index])
+						} else {
+							console.log('#### = '+this.groupBC[index]);
+							j--
+						}
 					}
 				}
 				console.log('预计下一期红球号码BC组 = '+redNumbersBC.sort(this.sortNumbers));
@@ -164,17 +238,17 @@
 					for (let i = 0; i<noSortBlueBallCountAry.length; i++) {
 						let blueBallNum = noSortBlueBallCountAry[i];
 						// 如果在原始未排序中找到需要的元素，取出原始未排序的下标，即蓝球号码 && 去重
-						if ((sortBlueNum == blueBallNum) && !this.guessBlueNums.includes((i+1))) {
-							this.guessBlueNums.push(i+1)
+						if ((sortBlueNum == blueBallNum) && !this.guessAllBlueNums.includes((i+1))) {
+							this.guessAllBlueNums.push(i+1)
 						}
 					}
 				}
-				console.log('预计下一期蓝球号码组 = '+ this.guessBlueNums);
+				console.log('预计下一期蓝球号码组 = '+ this.guessAllBlueNums);
 				
 				
 				// 最多期没有出现的号码
 				var maxIndex = 0;
-				for (let guessBlueNum of this.guessBlueNums) {
+				for (let guessBlueNum of this.guessAllBlueNums) {
 					let index = allBlueNums.indexOf(guessBlueNum);
 					console.log('多少期未出现过 = '+ index);
 					if (maxIndex < index) {
@@ -186,11 +260,11 @@
 				
 				
 				// 倒数第二期没有出现的号码
-				let index = this.guessBlueNums.indexOf(this.guessBlueNum)
-				this.guessBlueNums.splice(index, 1)
+				let index = this.guessAllBlueNums.indexOf(this.guessBlueNum)
+				this.guessAllBlueNums.splice(index, 1)
 				
 				var maxIndex2 = 0;
-				for (let guessBlueNum of this.guessBlueNums) {
+				for (let guessBlueNum of this.guessAllBlueNums) {
 					let index = allBlueNums.indexOf(guessBlueNum);
 					//console.log('多少期未出现过 = '+ index);
 					if (maxIndex2 < index) {
