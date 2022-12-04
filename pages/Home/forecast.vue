@@ -51,16 +51,15 @@
 				guessRedNums: [],//预测红球
 				guessBlueNums: [],//初步预测蓝球数组
 				guessBlueNum: '',//最终预测的蓝球
+				guessBlueNum2: '',//最终预测的蓝球（备选）
 			}
 		},
 		onLoad() {
 			// console.log('AB组='+this.groupAB);
 			// console.log('AC组='+this.groupAC);
 			// console.log('BC组='+this.groupBC);
-			
 			this.guessNextNumsAction()
 			this.analyseAction()
-			
 		},
 		methods: {
 			// 换一批预测
@@ -73,7 +72,12 @@
 			guessNextNumsAction() {
 				// 蓝球
 				this.guessBlueBallNew();
-				
+				// 红球
+				this.guessRedBall();
+			},
+			
+			// 私有方法：随机计算红球
+			guessRedBall() {
 				console.log('-----------------------随机计算红球');
 				// 三组红球
 				// AB组
@@ -117,7 +121,7 @@
 					}
 				}
 				console.log('预计下一期红球号码BC组 = '+redNumbersBC.sort(this.sortNumbers));
-				this.guessRedNums.push({"title": '第三组', 'redNums': redNumbersBC.sort(this.sortNumbers), 'blueNum': this.guessBlueNum})
+				this.guessRedNums.push({"title": '第三组', 'redNums': redNumbersBC.sort(this.sortNumbers), 'blueNum': this.guessBlueNum2})
 			},
 			
 			// 私有方法：随机计算蓝球（先计算出3个最低出现的频率，然后再算出最多期没有出现的号码）
@@ -172,13 +176,29 @@
 				var maxIndex = 0;
 				for (let guessBlueNum of this.guessBlueNums) {
 					let index = allBlueNums.indexOf(guessBlueNum);
+					console.log('多少期未出现过 = '+ index);
 					if (maxIndex < index) {
 						maxIndex = index
-						//console.log('多少期未出现过 = '+ index);
 						this.guessBlueNum = allBlueNums[index];
 					}
 				}
-				console.log('最终预计下一期蓝球号码 = '+ this.guessBlueNums);
+				console.log('最终预计下一期蓝球号码 = '+ this.guessBlueNum);
+				
+				
+				// 倒数第二期没有出现的号码
+				let index = this.guessBlueNums.indexOf(this.guessBlueNum)
+				this.guessBlueNums.splice(index, 1)
+				
+				var maxIndex2 = 0;
+				for (let guessBlueNum of this.guessBlueNums) {
+					let index = allBlueNums.indexOf(guessBlueNum);
+					//console.log('多少期未出现过 = '+ index);
+					if (maxIndex2 < index) {
+						maxIndex2 = index
+						this.guessBlueNum2 = allBlueNums[index];
+					}
+				}
+				console.log('最终预计下一期蓝球号码(备选) = '+ this.guessBlueNum2);
 				
 			},
 			
